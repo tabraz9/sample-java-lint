@@ -1,19 +1,22 @@
 package com.example.helloworld;
 
 /**
- * Contains classes related to the HelloWorld application.
+ * This package contains classes related to the HelloWorld application.
  */
-public class App {
-    
+public final class App {
+
     /**
-     * The entry point for the HelloWorld application.
-     *
-     * @param args the command-line arguments
+     * Private constructor to prevent instantiation.
      */
     private App() {
         // private constructor to prevent instantiation
     }
 
+    /**
+     * The entry point for the HelloWorld application.
+     *
+     * @param args the command-line arguments (currently unused)
+     */
     public static void main(final String[] args) {
         System.out.println("Hello World!");
     }
