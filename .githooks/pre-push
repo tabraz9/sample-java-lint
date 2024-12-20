@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Determine the root directory of the Git repository
+PROJECT_DIR=$(git rev-parse --show-toplevel)
+
+# Define the Maven project directory (relative to the repo root)
+MAVEN_DIR="$PROJECT_DIR/helloworld"
+
+# Check if the pom.xml file exists in the Maven directory
+if [ ! -f "$MAVEN_DIR/pom.xml" ]; then
+    echo "pom.xml not found in the directory $MAVEN_DIR. Ensure the Maven project path is correct."
+    exit 1
+fi
+
+# Change to the Maven project directory
+cd "$MAVEN_DIR" || { echo "Could not change to Maven project directory $MAVEN_DIR"; exit 1; }
+
+echo "Running Checkstyle..."
+mvn checkstyle:check
+if [ $? -ne 0 ]; then
+    echo "Checkstyle failed. Fix the issues before pushing."
+    exit 1
+fi
+
+echo "Running PMD..."
+mvn pmd:check
+if [ $? -ne 0 ]; then
+    echo "PMD check failed. Fix the issues before pushing."
+    exit 1
+fi
+
+echo "Running Tests..."
+mvn test
+if [ $? -ne 0 ]; then
+    echo "Tests failed. Fix the issues before pushing."
+    exit 1
+fi
+
+echo "All checks passed. Proceeding with push."
+
