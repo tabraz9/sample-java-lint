@@ -4,10 +4,10 @@ name: Code Quality Checks
 on:
   push:
     branches:
-      - main  # Replace 'main' with your default branch
+      - checkstyle_pmd  # Replace 'main' with your default branch
   pull_request:
     branches:
-      - main
+      - checkstyle_pmd
 
 jobs:
   check-code:
