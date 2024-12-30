@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      WORKING_DIR: sample-java-lint/helloworld  
+      WORKING_DIR: helloworld
 
     steps:
       # Step 1: Checkout code
