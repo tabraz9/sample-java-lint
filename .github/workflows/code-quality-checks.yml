@@ -3,38 +3,40 @@ name: Code Quality Checks
 on:
   pull_request:
     branches:
-      - checkstyle_pmd   # Change this to match the branch you want to protect (e.g., "develop" or "master")
+      - checkstyle_pmd
 
 jobs:
   code-quality:
     name: Run Checkstyle and PMD
     runs-on: ubuntu-latest
 
+    env:
+      WORKING_DIR: sample-java-lint/helloworld  
+
     steps:
-      # Step 1: Checkout the code
+      # Step 1: Checkout code
       - name: Checkout Code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-      # Step 2: Set up Java
+      # Step 2: Verify project files
+      - name: Verify Files
+        run: ls -la $WORKING_DIR
+
+      # Step 3: Set up Java
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
-          java-version: 8   # Match the version in your `pom.xml`
+          java-version: 8
           distribution: 'temurin'
 
-      # Step 3: Cache Maven dependencies (optional but speeds up builds)
-      - name: Cache Maven Dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2
-          key: maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            maven-
-
-      # Step 4: Run Maven build with Checkstyle
+      # Step 4: Run Checkstyle
       - name: Run Checkstyle
         run: mvn checkstyle:check -Dcheckstyle.config.location=google_checks.xml
+        working-directory: ${{ env.WORKING_DIR }}
 
-      # Step 5: Run Maven build with PMD
+      # Step 5: Run PMD
       - name: Run PMD
         run: mvn pmd:check -Dpmd.rulesetfiles=https://raw.githubusercontent.com/pmd/pmd/main/pmd-java/src/main/resources/rulesets/java/quickstart.xml
+        working-directory: ${{ env.WORKING_DIR }}
